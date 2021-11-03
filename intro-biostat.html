@@ -4,7 +4,7 @@
     <title>Lecture 3: Introduction to biostatistics</title>
     <meta charset="utf-8" />
     <meta name="author" content="@TiffanyTimbers (UBC)" />
-    <meta name="author" content="2021-11-02" />
+    <meta name="author" content="2021-11-03" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -15,7 +15,7 @@ class: top, left, title-slide
 # Lecture 3: Introduction to biostatistics
 ## MEDI 504
 ### <span class="citation">@TiffanyTimbers</span> (UBC)
-### 2021-11-02
+### 2021-11-03
 
 ---
 
@@ -143,15 +143,48 @@ Examples:
 
 ---
 
+## Challenge #1
+
+What kind of statistical question is this?
+
+#### *Is a yet undiagnosed patient's breast cancer tumor malignant or benign?* 
+
+---
+
+## Challenge #2
+
+What kind of statistical question is this?
+
+#### *Is inhalation of marijuana associated with lung cancer?* 
+
+---
+
+## Challenge #2
+
+What kind of statistical question is this?
+
+#### *Does a truncation of the BRCA2 gene cause cancer?* 
+
+---
+
+## Challenge #4
+
+What kind of statistical question is this?
+
+#### *Are there sub-types of ovarian tumors?*
+
+---
+
 ### So you know the type of question, now what?
 
+.pull-left[
 This helps narrow down the possibilities 
 of the kind of analysis you might want to do!
 
 --
 
-For example, if you have the question: "How many viral illnesses will someone have next year?"
-and you identify that it is predictive. 
+For example, if you have the question: **"How many viral illnesses will someone have next year?"**
+and you identify that it is **predictive.**
 You could narrow down that some kind of statistical or machine learning model 
 might help you answer that.
 
@@ -160,26 +193,36 @@ might help you answer that.
 Then you need to go a step deeper and look at the data that you have, 
 and see which kind of statistical 
 or machine learning model is most suitable for your data.
+]
 
-&lt;!--draw sketch of the data--&gt;
+.pull-right[
+&lt;img src="https://scikit-learn.org/stable/_static/ml_map.png" width=700&gt;
 
-&lt;!--draw figure like this but better: https://towardsdatascience.com/types-of-machine-learning-algorithms-you-should-know-953a08248861--&gt;
-
+Source: [scikit-learn algorithm cheat sheet](https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html)
+]
 ---
 
 ## Another example 
 
+.pull-left[
 For example, if you have the question: "Is the gestational length of first born babies the same as that of non-first borns?"
 and you identify that it is inferential. 
 You could narrow down that some kind of statistical inference approach 
 might help you answer that.
 
+--
+
 Then again, you need to go a step deeper and look at the data that you have, 
 and see which kind of statistical inference approach is most suitable for your data.
+]
 
-&lt;!--draw sketch of the data--&gt;
+.pull-right[
+&lt;img src="https://onishlab.colostate.edu/wp-content/uploads/2019/07/which_test_flowchart.png" width=700&gt;
 
-&lt;!--draw figure like this but better: https://towardsdatascience.com/types-of-machine-learning-algorithms-you-should-know-953a08248861--&gt;
+Source: https://onishlab.colostate.edu/summer-statistics-workshop-2019/
+
+Or for another, see this website: http://www.biostathandbook.com/testchoice.html
+]
 
 ---
 
@@ -189,30 +232,103 @@ and see which kind of statistical inference approach is most suitable for your d
 
 ### Case 1
 
+Question: *Is a yet undiagnosed patient's breast cancer tumor malignant or benign?*
+
+Data:
+
+
+|     ID|     Radius|   Texture|  Perimeter|       Area| Smoothness|Class |
+|------:|----------:|---------:|----------:|----------:|----------:|:-----|
+| 926125|  1.9275296| 1.3485941|  2.1001278|  1.9667039|  0.9627130|M     |
+| 926424|  2.1091388| 0.7208383|  2.0589739|  2.3417954|  1.0409262|M     |
+| 926682|  1.7033556| 2.0833009|  1.6145108|  1.7223261|  0.1023682|M     |
+| 926954|  0.7016669| 2.0437755|  0.6720844|  0.5774446| -0.8397450|M     |
+| 927241|  1.8367249| 2.3344032|  1.9807813|  1.7336925|  1.5244257|M     |
+|  92751| -1.8068114| 1.2207179| -1.8127934| -1.3466044| -3.1093489|B     |
+
+Data reference: https://archive-beta.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+diagnostic
+
 ---
 
 ### Case 2
+
+Question: *Is inhalation of marijuana associated with lung cancer?*
+
+Data:
+
+
+|    ID|sex    |gender | age| smoker|marijuana_use |  bmi| lung_cancer|
+|-----:|:------|:------|---:|------:|:-------------|----:|-----------:|
+| 51916|male   |fluid  |  35|      1|never         | 22.3|           0|
+| 51340|male   |male   |  43|      0|frequent      | 18.0|           0|
+| 50479|male   |male   |  29|      0|sometimes     | 32.5|           1|
+| 54953|female |female |  54|      0|frequent      | 20.0|           0|
+| 56936|female |female |  37|      0|never         | 26.1|           0|
+| 52701|male   |male   |  51|      0|never         | 29.8|           1|
+
+*Note: this is simulated data.*
 
 ---
 
 ### Case 3
 
+Question: *Does a truncation of the BRCA2 gene cause cancer?*
+
+Data:
+
+
+|    ID|sex    |gender | age| smoker|  bmi| brca2_truncation|
+|-----:|:------|:------|---:|------:|----:|----------------:|
+| 25423|male   |fluid  |  35|      1| 22.3|                1|
+| 26318|male   |male   |  43|      0| 18.0|                0|
+| 24055|male   |male   |  29|      0| 32.5|                1|
+| 24727|female |female |  54|      0| 20.0|                0|
+| 25493|female |female |  37|      0| 26.1|                0|
+| 21299|male   |male   |  51|      0| 29.8|                0|
+
+*Note: this is simulated data.*
+
+---
+
+### Case 4
+
+Question: *Are there sub-types of ovarian tumors?*
+
+Data:
+
+
+|     ID|     Radius|   Texture|  Perimeter|       Area| Smoothness|
+|------:|----------:|---------:|----------:|----------:|----------:|
+| 926125|  1.9275296| 1.3485941|  2.1001278|  1.9667039|  0.9627130|
+| 926424|  2.1091388| 0.7208383|  2.0589739|  2.3417954|  1.0409262|
+| 926682|  1.7033556| 2.0833009|  1.6145108|  1.7223261|  0.1023682|
+| 926954|  0.7016669| 2.0437755|  0.6720844|  0.5774446| -0.8397450|
+| 927241|  1.8367249| 2.3344032|  1.9807813|  1.7336925|  1.5244257|
+|  92751| -1.8068114| 1.2207179| -1.8127934| -1.3466044| -3.1093489|
+
+*Note: this is simulated data.*
+
+---
+
+## Some key notes:
+
+- identifying whether there even is a response variable is important!
+
+- the kind of response variable/target is critical for narrowing down the method
+
+- the explanatory variables/predictors/features are also important, but I consider these after the response variabe
+
 ---
 
 ## The statistical landscape in R
 
-&lt;!-- ecosystem R base + tidymodels--&gt;
+Common packages include:
 
---- 
-
-## Let's talk a little more about statistical inference
-
-- intro slides from DSCI 100
-- intro slides from STAT 201
+&lt;img src="img/stat-landscape.png" width="80%" /&gt;
 
 ---
 
-## Example of a common inferential analysis in R
+## Example of an inferential analysis in R
 
 - case: fruit fly example
 - start with visualization (uncertainty focus!)

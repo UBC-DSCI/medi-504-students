@@ -157,15 +157,48 @@ Examples:
 
 ---
 
+## Challenge #1
+
+What kind of statistical question is this?
+
+#### *Is a yet undiagnosed patient's breast cancer tumor malignant or benign?* 
+
+---
+
+## Challenge #2
+
+What kind of statistical question is this?
+
+#### *Is inhalation of marijuana associated with lung cancer?* 
+
+---
+
+## Challenge #2
+
+What kind of statistical question is this?
+
+#### *Does a truncation of the BRCA2 gene cause cancer?* 
+
+---
+
+## Challenge #4
+
+What kind of statistical question is this?
+
+#### *Are there sub-types of ovarian tumors?*
+
+---
+
 ### So you know the type of question, now what?
 
+.pull-left[
 This helps narrow down the possibilities 
 of the kind of analysis you might want to do!
 
 --
 
-For example, if you have the question: "How many viral illnesses will someone have next year?"
-and you identify that it is predictive. 
+For example, if you have the question: **"How many viral illnesses will someone have next year?"**
+and you identify that it is **predictive.**
 You could narrow down that some kind of statistical or machine learning model 
 might help you answer that.
 
@@ -174,26 +207,36 @@ might help you answer that.
 Then you need to go a step deeper and look at the data that you have, 
 and see which kind of statistical 
 or machine learning model is most suitable for your data.
+]
 
-<!--draw sketch of the data-->
+.pull-right[
+<img src="https://scikit-learn.org/stable/_static/ml_map.png" width=700>
 
-<!--draw figure like this but better: https://towardsdatascience.com/types-of-machine-learning-algorithms-you-should-know-953a08248861-->
-
+Source: [scikit-learn algorithm cheat sheet](https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html)
+]
 ---
 
 ## Another example 
 
+.pull-left[
 For example, if you have the question: "Is the gestational length of first born babies the same as that of non-first borns?"
 and you identify that it is inferential. 
 You could narrow down that some kind of statistical inference approach 
 might help you answer that.
 
+--
+
 Then again, you need to go a step deeper and look at the data that you have, 
 and see which kind of statistical inference approach is most suitable for your data.
+]
 
-<!--draw sketch of the data-->
+.pull-right[
+<img src="https://onishlab.colostate.edu/wp-content/uploads/2019/07/which_test_flowchart.png" width=700>
 
-<!--draw figure like this but better: https://towardsdatascience.com/types-of-machine-learning-algorithms-you-should-know-953a08248861-->
+Source: https://onishlab.colostate.edu/summer-statistics-workshop-2019/
+
+Or for another, see this website: http://www.biostathandbook.com/testchoice.html
+]
 
 ---
 
@@ -203,30 +246,104 @@ and see which kind of statistical inference approach is most suitable for your d
 
 ### Case 1
 
+Question: *Is a yet undiagnosed patient's breast cancer tumor malignant or benign?*
+
+Data:
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+read_csv("data/wdbc.csv") %>%
+    select(ID, Radius:Smoothness, Class) %>%
+    tail() %>%
+    kable()
+```
+
+Data reference: https://archive-beta.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+diagnostic
+
 ---
 
 ### Case 2
+
+Question: *Is inhalation of marijuana associated with lung cancer?*
+
+Data:
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+tibble(ID = c(round(runif(6, 50000, 60000))),
+       sex = c("male", "male", "male", "female", "female", "male"),
+       gender = c("fluid", "male", "male", "female", "female", "male"),
+       age = c(35, 43, 29, 54, 37, 51),
+       smoker = c(1, 0, 0, 0, 0, 0),
+       marijuana_use = c("never", "frequent", "sometimes", "frequent", "never", "never"),
+       bmi = c(22.3, 18, 32.5, 20, 26.1, 29.8),
+       lung_cancer = c(0, 0, 1, 0, 0, 1)) %>%
+    kable()
+```
+
+*Note: this is simulated data.*
 
 ---
 
 ### Case 3
 
+Question: *Does a truncation of the BRCA2 gene cause cancer?*
+
+Data:
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+tibble(ID = c(round(runif(6, 20000, 30000))),
+       sex = c("male", "male", "male", "female", "female", "male"),
+       gender = c("fluid", "male", "male", "female", "female", "male"),
+       age = c(35, 43, 29, 54, 37, 51),
+       smoker = c(1, 0, 0, 0, 0, 0),
+       bmi = c(22.3, 18, 32.5, 20, 26.1, 29.8),
+       brca2_truncation = c(1, 0, 1, 0, 0, 0)) %>%
+    kable()
+```
+
+*Note: this is simulated data.*
+
+---
+
+### Case 4
+
+Question: *Are there sub-types of ovarian tumors?*
+
+Data:
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+read_csv("data/wdbc.csv") %>%
+    select(ID, Radius:Smoothness) %>%
+    tail() %>%
+    kable()
+```
+
+*Note: this is simulated data.*
+
+---
+
+## Some key notes:
+
+- identifying whether there even is a response variable is important!
+
+- the kind of response variable/target is critical for narrowing down the method
+
+- the explanatory variables/predictors/features are also important, but I consider these after the response variabe
+
 ---
 
 ## The statistical landscape in R
 
-<!-- ecosystem R base + tidymodels-->
+Common packages include:
 
---- 
-
-## Let's talk a little more about statistical inference
-
-- intro slides from DSCI 100
-- intro slides from STAT 201
+```{r, echo = FALSE, out.width = "80%"}
+include_graphics("img/stat-landscape.png")
+```
 
 ---
 
-## Example of a common inferential analysis in R
+## Example of an inferential analysis in R
 
 - case: fruit fly example
 - start with visualization (uncertainty focus!)
