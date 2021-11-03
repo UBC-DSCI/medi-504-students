@@ -333,6 +333,14 @@ read_csv("data/wdbc.csv") %>%
 
 ---
 
+## A question for you!
+
+Write down one statistical question you are trying to answer with your research.
+
+Identify the type of question it is.
+
+---
+
 ## The statistical landscape in R
 
 Common packages include:
