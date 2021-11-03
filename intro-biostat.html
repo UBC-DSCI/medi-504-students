@@ -259,12 +259,12 @@ Data:
 
 |    ID|sex    |gender | age| smoker|marijuana_use |  bmi| lung_cancer|
 |-----:|:------|:------|---:|------:|:-------------|----:|-----------:|
-| 51916|male   |fluid  |  35|      1|never         | 22.3|           0|
-| 51340|male   |male   |  43|      0|frequent      | 18.0|           0|
-| 50479|male   |male   |  29|      0|sometimes     | 32.5|           1|
-| 54953|female |female |  54|      0|frequent      | 20.0|           0|
-| 56936|female |female |  37|      0|never         | 26.1|           0|
-| 52701|male   |male   |  51|      0|never         | 29.8|           1|
+| 52228|male   |fluid  |  35|      1|never         | 22.3|           0|
+| 58410|male   |male   |  43|      0|frequent      | 18.0|           0|
+| 55816|male   |male   |  29|      0|sometimes     | 32.5|           1|
+| 52805|female |female |  54|      0|frequent      | 20.0|           0|
+| 55394|female |female |  37|      0|never         | 26.1|           0|
+| 50416|male   |male   |  51|      0|never         | 29.8|           1|
 
 *Note: this is simulated data.*
 
@@ -279,12 +279,12 @@ Data:
 
 |    ID|sex    |gender | age| smoker|  bmi| brca2_truncation|
 |-----:|:------|:------|---:|------:|----:|----------------:|
-| 25423|male   |fluid  |  35|      1| 22.3|                1|
-| 26318|male   |male   |  43|      0| 18.0|                0|
-| 24055|male   |male   |  29|      0| 32.5|                1|
-| 24727|female |female |  54|      0| 20.0|                0|
-| 25493|female |female |  37|      0| 26.1|                0|
-| 21299|male   |male   |  51|      0| 29.8|                0|
+| 25936|male   |fluid  |  35|      1| 22.3|                1|
+| 24942|male   |male   |  43|      0| 18.0|                0|
+| 28333|male   |male   |  29|      0| 32.5|                1|
+| 28978|female |female |  54|      0| 20.0|                0|
+| 28046|female |female |  37|      0| 26.1|                0|
+| 23834|male   |male   |  51|      0| 29.8|                0|
 
 *Note: this is simulated data.*
 
@@ -330,37 +330,269 @@ Common packages include:
 
 ## Example of an inferential analysis in R
 
-- case: fruit fly example
-- start with visualization (uncertainty focus!)
+Question: *Does sexual activity effect the longevity of male fruit flies?*
+
+--
+
+What kind of question is this?
+
+---
+
+## Data
+
+Fruitflies were divided randomly into groups of 25 each. 
+The response was the longevity of the fruitfly in days. One group was kept
+solitary, while another was given 8 virgin females per day. 
+
+
+```r
+library(tidyverse)
+fruitfly_2_groups &lt;- read_csv("data/fruitfly_2_groups.csv")
+fruitfly_2_groups
+```
+
+```
+## # A tibble: 50 x 2
+##    longevity sexually_active
+##        &lt;dbl&gt; &lt;chr&gt;          
+##  1        40 No             
+##  2        37 No             
+##  3        44 No             
+##  4        47 No             
+##  5        47 No             
+##  6        47 No             
+##  7        68 No             
+##  8        47 No             
+##  9        54 No             
+## 10        61 No             
+## # … with 40 more rows
+```
+
+*Note: this is a modification of the original data set where we only considered two of the groups from the original experiment.* 
+*Original data source: [`faraway` R package](https://cran.r-project.org/web/packages/faraway/faraway.pdf).*
+
+---
+
+## So how should we analyze this data?
+
+- What is our response variable? What kind of data is it?
+
+- What is our explanatory variable? What kind of data is it?
+
+---
+
+## So how should we analyze this data?
+
+- a t-test is suitable here (as would be a permutation test for difference of means, or a Mann Whitney U Test)
+
+- to perform this, we need to parameterize null ($H_0$) and alternative hypotheses ($H_A$):
+
+*$H_0$: There **is no** difference in mean longevity of sexually active and non-sexually active male fruitflies.*
+
+*$H_A$: There **is** difference in mean longevity of sexually active and non-sexually active male fruitflies.*
+
+---
+
+## Always start with a visualization
+
+- The visualization should be related to your question!
+- It should complement your statistical method(s)
+
+--
+
+- We are interested in the mean - the population mean however!
+
+--
+
+- **So here, we should visualize our estimates of the population means, as well as our uncertainty about them!**
+
+---
+
+## Visualizing estimates and their uncertainty
+
+1. Calculate estimates &amp; uncertainty
+
+2. Visualize estimates and uncertainty, communicating as much about the underlying sample data as possible!
+
+---
+
+## Calculate estimates &amp; uncertainty
+
+Here we calculate the sample means and 95% confidence interval for a mean 
+using the t-distribution, assuming independence.
+
+
+```r
+fruitfly_2_estimates &lt;- fruitfly_2_groups %&gt;% 
+  group_by(sexually_active) %&gt;% 
+  summarise(mean = mean(longevity),
+              n = n(),
+              se = sd(longevity) / sqrt(n()),
+              df = n - 1,
+              t_star = qt(0.975, df),
+              lower = mean - t_star * se,
+              upper = mean + t_star * se)
+
+fruitfly_2_estimates
+```
+
+```
+## # A tibble: 2 x 8
+##   sexually_active  mean     n    se    df t_star lower upper
+##   &lt;chr&gt;           &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 No               63.6    25  3.29    24   2.06  56.8  70.4
+## 2 Yes              38.7    25  2.42    24   2.06  33.7  43.7
+```
+
+---
+
+## Final visualization
+
+
+```r
+# plot raw data points for each group as a transparent grey/black point
+# overlay mean as a red diamond
+fruitfly_2_estimates_viz &lt;- ggplot(fruitfly_2_groups, aes(x = sexually_active, y = longevity)) +
+    geom_jitter(width = 0.1, size = 2, alpha = 0.2) +
+    stat_summary(fun = mean,
+                 geom = "point", shape = 18, 
+                 size = 4, color = "blue") +
+    geom_errorbar(data = fruitfly_2_estimates,
+                  mapping = aes(x = sexually_active, 
+                                y = mean,
+                                ymin = lower, 
+                                ymax = upper), 
+                  width = 0.15, colour = "blue", size = 1) + 
+    ylim(c(0, 100)) +
+    ylab("Longevity (days)") +
+    xlab("Sexual activity") +
+    theme_bw() +
+    theme(text = element_text(size=20))
+```
+
+---
+
+class: center
+
+
+```r
+fruitfly_2_estimates_viz
+```
+
+![](intro-biostat_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+--
+
+What do we think so far? Are we likely to reject the null hypothesis?
 
 ---
 
 ## Example of t-test
 
-- demo formula notation
-- demo non-tidy output
+
+```r
+fruitfly_2_ttest &lt;- t.test(longevity ~ sexually_active, data = fruitfly_2_groups)
+fruitfly_2_ttest
+```
+
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  longevity by sexually_active
+## t = 6.0811, df = 44.09, p-value = 2.545e-07
+## alternative hypothesis: true difference in means between group No and group Yes is not equal to 0
+## 95 percent confidence interval:
+##  16.60817 33.07183
+## sample estimates:
+##  mean in group No mean in group Yes 
+##             63.56             38.72
+```
+
+--
+
+How do we parse this output?
 
 ---
 
-## Example of ANOVA
+## Using base R
+
+
+```r
+fruitfly_2_ttest$p.value
+```
+
+```
+## [1] 2.545463e-07
+```
+
+
+```r
+fruitfly_2_ttest$statistic
+```
+
+```
+##        t 
+## 6.081128
+```
 
 ---
 
-## Example of linear regression
+## Using `broom`
 
-- again start with visualization
-- ref-treatment in R
-- demo non-tidy output, and how to get tidy
+
+```r
+library(broom)
+tidy(fruitfly_2_ttest)
+```
+
+```
+## # A tibble: 1 x 10
+##   estimate estimate1 estimate2 statistic     p.value parameter conf.low conf.high method                  alternative
+##      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                   &lt;chr&gt;      
+## 1     24.8      63.6      38.7      6.08 0.000000255      44.1     16.6      33.1 Welch Two Sample t-test two.sided
+```
+
+
+```r
+tidy(fruitfly_2_ttest) %&gt;%
+    select(p.value)
+```
+
+```
+## # A tibble: 1 x 1
+##       p.value
+##         &lt;dbl&gt;
+## 1 0.000000255
+```
 
 ---
 
-## Common things that go wrong in biostatistics
+## What are our conclusions?
 
-1. Data analysis does not match the question
 
-2. ...
 
 ---
+
+## Summary
+
+1. Identify the kind of question
+
+2. Look at the data
+
+3. Identify a **suitable** statistical method for your question and data
+
+4. Create a visualization
+
+5. Apply your statistical method
+
+6. (maybe create another visualization)
+
+7. Interpret and communicate your assumptions and results
+
+---
+
+## Questions?
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

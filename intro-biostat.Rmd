@@ -345,34 +345,193 @@ include_graphics("img/stat-landscape.png")
 
 ## Example of an inferential analysis in R
 
-- case: fruit fly example
-- start with visualization (uncertainty focus!)
+Question: *Does sexual activity effect the longevity of male fruit flies?*
+
+--
+
+What kind of question is this?
+
+---
+
+## Data
+
+Fruitflies were divided randomly into groups of 25 each. 
+The response was the longevity of the fruitfly in days. One group was kept
+solitary, while another was given 8 virgin females per day. 
+
+```{r, warning = FALSE, message = FALSE}
+library(tidyverse)
+fruitfly_2_groups <- read_csv("data/fruitfly_2_groups.csv")
+fruitfly_2_groups
+```
+
+*Note: this is a modification of the original data set where we only considered two of the groups from the original experiment.* 
+*Original data source: [`faraway` R package](https://cran.r-project.org/web/packages/faraway/faraway.pdf).*
+
+---
+
+## So how should we analyze this data?
+
+- What is our response variable? What kind of data is it?
+
+- What is our explanatory variable? What kind of data is it?
+
+---
+
+## So how should we analyze this data?
+
+- a t-test is suitable here (as would be a permutation test for difference of means, or a Mann Whitney U Test)
+
+- to perform this, we need to parameterize null ($H_0$) and alternative hypotheses ($H_A$):
+
+*$H_0$: There **is no** difference in mean longevity of sexually active and non-sexually active male fruitflies.*
+
+*$H_A$: There **is** difference in mean longevity of sexually active and non-sexually active male fruitflies.*
+
+---
+
+## Always start with a visualization
+
+- The visualization should be related to your question!
+- It should complement your statistical method(s)
+
+--
+
+- We are interested in the mean - the population mean however!
+
+--
+
+- **So here, we should visualize our estimates of the population means, as well as our uncertainty about them!**
+
+---
+
+## Visualizing estimates and their uncertainty
+
+1. Calculate estimates & uncertainty
+
+2. Visualize estimates and uncertainty, communicating as much about the underlying sample data as possible!
+
+---
+
+## Calculate estimates & uncertainty
+
+Here we calculate the sample means and 95% confidence interval for a mean 
+using the t-distribution, assuming independence.
+
+```{r}
+fruitfly_2_estimates <- fruitfly_2_groups %>% 
+  group_by(sexually_active) %>% 
+  summarise(mean = mean(longevity),
+              n = n(),
+              se = sd(longevity) / sqrt(n()),
+              df = n - 1,
+              t_star = qt(0.975, df),
+              lower = mean - t_star * se,
+              upper = mean + t_star * se)
+
+fruitfly_2_estimates
+```
+
+---
+
+## Final visualization
+
+```{r plot fruitfly_2_groups data, warning = FALSE}
+# plot raw data points for each group as a transparent grey/black point
+# overlay mean as a red diamond
+fruitfly_2_estimates_viz <- ggplot(fruitfly_2_groups, aes(x = sexually_active, y = longevity)) +
+    geom_jitter(width = 0.1, size = 2, alpha = 0.2) +
+    stat_summary(fun = mean,
+                 geom = "point", shape = 18, 
+                 size = 4, color = "blue") +
+    geom_errorbar(data = fruitfly_2_estimates,
+                  mapping = aes(x = sexually_active, 
+                                y = mean,
+                                ymin = lower, 
+                                ymax = upper), 
+                  width = 0.15, colour = "blue", size = 1) + 
+    ylim(c(0, 100)) +
+    ylab("Longevity (days)") +
+    xlab("Sexual activity") +
+    theme_bw() +
+    theme(text = element_text(size=20))
+```
+
+---
+
+class: center
+
+```{r, warning = FALSE}
+fruitfly_2_estimates_viz
+```
+
+--
+
+What do we think so far? Are we likely to reject the null hypothesis?
 
 ---
 
 ## Example of t-test
 
-- demo formula notation
-- demo non-tidy output
+```{r}
+fruitfly_2_ttest <- t.test(longevity ~ sexually_active, data = fruitfly_2_groups)
+fruitfly_2_ttest
+```
+
+--
+
+How do we parse this output?
 
 ---
 
-## Example of ANOVA
+## Using base R
+
+```{r}
+fruitfly_2_ttest$p.value
+```
+
+```{r}
+fruitfly_2_ttest$statistic
+```
 
 ---
 
-## Example of linear regression
+## Using `broom`
 
-- again start with visualization
-- ref-treatment in R
-- demo non-tidy output, and how to get tidy
+```{r}
+library(broom)
+tidy(fruitfly_2_ttest)
+```
+
+```{r}
+tidy(fruitfly_2_ttest) %>%
+    select(p.value)
+```
+
+---
+
+## What are our conclusions?
+
+
 
 ---
 
-## Common things that go wrong in biostatistics
+## Summary
 
-1. Data analysis does not match the question
+1. Identify the kind of question
 
-2. ...
+2. Look at the data
+
+3. Identify a **suitable** statistical method for your question and data
+
+4. Create a visualization
+
+5. Apply your statistical method
+
+6. (maybe create another visualization)
+
+7. Interpret and communicate your assumptions and results
 
 ---
+
+## Questions?
