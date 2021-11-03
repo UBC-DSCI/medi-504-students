@@ -259,12 +259,12 @@ Data:
 
 |    ID|sex    |gender | age| smoker|marijuana_use |  bmi| lung_cancer|
 |-----:|:------|:------|---:|------:|:-------------|----:|-----------:|
-| 52228|male   |fluid  |  35|      1|never         | 22.3|           0|
-| 58410|male   |male   |  43|      0|frequent      | 18.0|           0|
-| 55816|male   |male   |  29|      0|sometimes     | 32.5|           1|
-| 52805|female |female |  54|      0|frequent      | 20.0|           0|
-| 55394|female |female |  37|      0|never         | 26.1|           0|
-| 50416|male   |male   |  51|      0|never         | 29.8|           1|
+| 50050|male   |fluid  |  35|      1|never         | 22.3|           0|
+| 57552|male   |male   |  43|      0|frequent      | 18.0|           0|
+| 50997|male   |male   |  29|      0|sometimes     | 32.5|           1|
+| 53573|female |female |  54|      0|frequent      | 20.0|           0|
+| 50499|female |female |  37|      0|never         | 26.1|           0|
+| 53235|male   |male   |  51|      0|never         | 29.8|           1|
 
 *Note: this is simulated data.*
 
@@ -279,12 +279,12 @@ Data:
 
 |    ID|sex    |gender | age| smoker|  bmi| brca2_truncation|
 |-----:|:------|:------|---:|------:|----:|----------------:|
-| 25936|male   |fluid  |  35|      1| 22.3|                1|
-| 24942|male   |male   |  43|      0| 18.0|                0|
-| 28333|male   |male   |  29|      0| 32.5|                1|
-| 28978|female |female |  54|      0| 20.0|                0|
-| 28046|female |female |  37|      0| 26.1|                0|
-| 23834|male   |male   |  51|      0| 29.8|                0|
+| 22640|male   |fluid  |  35|      1| 22.3|                1|
+| 23716|male   |male   |  43|      0| 18.0|                0|
+| 28522|male   |male   |  29|      0| 32.5|                1|
+| 25178|female |female |  54|      0| 20.0|                0|
+| 23339|female |female |  37|      0| 26.1|                0|
+| 24296|male   |male   |  51|      0| 29.8|                0|
 
 *Note: this is simulated data.*
 
@@ -419,7 +419,7 @@ fruitfly_2_groups
 ## Calculate estimates &amp; uncertainty
 
 Here we calculate the sample means and 95% confidence interval for a mean 
-using the t-distribution, assuming independence.
+using the t-distribution, assuming independence and the central limit theorem.
 
 
 ```r
@@ -543,34 +543,50 @@ fruitfly_2_ttest$statistic
 
 ```r
 library(broom)
-tidy(fruitfly_2_ttest)
-```
-
-```
-## # A tibble: 1 x 10
-##   estimate estimate1 estimate2 statistic     p.value parameter conf.low conf.high method                  alternative
-##      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                   &lt;chr&gt;      
-## 1     24.8      63.6      38.7      6.08 0.000000255      44.1     16.6      33.1 Welch Two Sample t-test two.sided
+fruitfly_2_ttest_tidy &lt;- tidy(fruitfly_2_ttest)
 ```
 
 
 ```r
-tidy(fruitfly_2_ttest) %&gt;%
-    select(p.value)
+fruitfly_2_ttest_pval &lt;- fruitfly_2_ttest_tidy %&gt;%
+    select(p.value) %&gt;%
+    pull()
+
+fruitfly_2_ttest_pval
 ```
 
 ```
-## # A tibble: 1 x 1
-##       p.value
-##         &lt;dbl&gt;
-## 1 0.000000255
+## [1] 2.545463e-07
 ```
 
 ---
 
 ## What are our conclusions?
 
+--
 
+The male fruitflys which were not sexually active were observed to have 
+an increased lifespan
+(they lived 24.84 days longer).  
+Specifically, the male fruitflys which were not sexually active had a mean lifespan of 
+64 (95% confidence interval was 57, 70) 
+days,
+while male fruitflys which were sexually active had a mean lifespan of 
+39 (95% confidence interval was 34, 44) 
+days.
+
+Carrying out a t-test (assuming independence and the central limit theorem) 
+with alpha set to 0.05,
+indicated that we have enough statistical evidence to reject our null hypothesis, `\(H_0\)`,
+as our p-value was much smaller than alpha (p = 2.5454628\times 10^{-7}).
+
+
+We can accept the alternative hypothesis that, `\(H_1\)`, 
+that there is a difference in the male fruitfly lifespan
+when males are sexually active compared to when they are not.
+Due to the randomized experimental design, 
+we can also suggest that this effect of sexual activity is causal on the change in lifespan.
+Specifically, sexual activity in male fruitflys decreases lifespan.
 
 ---
 
