@@ -297,7 +297,8 @@ tibble(ID = c(round(runif(6, 20000, 30000))),
        age = c(35, 43, 29, 54, 37, 51),
        smoker = c(1, 0, 0, 0, 0, 0),
        bmi = c(22.3, 18, 32.5, 20, 26.1, 29.8),
-       brca2_truncation = c(1, 0, 1, 0, 0, 0)) %>%
+       brca2_truncation = c(1, 0, 1, 0, 0, 0),
+       cancer = c(1, 0, 1, 0, 0, 1)) %>%
     kable()
 ```
 
@@ -540,9 +541,8 @@ with alpha set to 0.05,
 indicated that we have enough statistical evidence to reject our null hypothesis, $H_0$,
 as our p-value was much smaller than alpha (p = `r fruitfly_2_ttest_pval`).
 
-
-We can accept the alternative hypothesis that, $H_1$, 
-that there is a difference in the male fruitfly lifespan
+We can suggest the alternative hypothesis, $H_1$, may be more favourable. 
+Specifically, that there is a difference in the male fruitfly lifespan
 when males are sexually active compared to when they are not.
 Due to the randomized experimental design, 
 we can also suggest that this effect of sexual activity is causal on the change in lifespan.

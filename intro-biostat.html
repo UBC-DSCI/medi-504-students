@@ -4,7 +4,7 @@
     <title>Lecture 3: Introduction to biostatistics</title>
     <meta charset="utf-8" />
     <meta name="author" content="@TiffanyTimbers (UBC)" />
-    <meta name="author" content="2021-11-03" />
+    <meta name="author" content="2021-11-08" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -15,7 +15,7 @@ class: top, left, title-slide
 # Lecture 3: Introduction to biostatistics
 ## MEDI 504
 ### <span class="citation">@TiffanyTimbers</span> (UBC)
-### 2021-11-03
+### 2021-11-08
 
 ---
 
@@ -259,12 +259,12 @@ Data:
 
 |    ID|sex    |gender | age| smoker|marijuana_use |  bmi| lung_cancer|
 |-----:|:------|:------|---:|------:|:-------------|----:|-----------:|
-| 54354|male   |fluid  |  35|      1|never         | 22.3|           0|
-| 51957|male   |male   |  43|      0|frequent      | 18.0|           0|
-| 54393|male   |male   |  29|      0|sometimes     | 32.5|           1|
-| 55082|female |female |  54|      0|frequent      | 20.0|           0|
-| 52085|female |female |  37|      0|never         | 26.1|           0|
-| 51327|male   |male   |  51|      0|never         | 29.8|           1|
+| 50841|male   |fluid  |  35|      1|never         | 22.3|           0|
+| 54135|male   |male   |  43|      0|frequent      | 18.0|           0|
+| 53176|male   |male   |  29|      0|sometimes     | 32.5|           1|
+| 59343|female |female |  54|      0|frequent      | 20.0|           0|
+| 50495|female |female |  37|      0|never         | 26.1|           0|
+| 52159|male   |male   |  51|      0|never         | 29.8|           1|
 
 *Note: this is simulated data.*
 
@@ -277,14 +277,14 @@ Question: *Does a truncation of the BRCA2 gene cause cancer?*
 Data:
 
 
-|    ID|sex    |gender | age| smoker|  bmi| brca2_truncation|
-|-----:|:------|:------|---:|------:|----:|----------------:|
-| 28187|male   |fluid  |  35|      1| 22.3|                1|
-| 24331|male   |male   |  43|      0| 18.0|                0|
-| 25399|male   |male   |  29|      0| 32.5|                1|
-| 27892|female |female |  54|      0| 20.0|                0|
-| 28711|female |female |  37|      0| 26.1|                0|
-| 25540|male   |male   |  51|      0| 29.8|                0|
+|    ID|sex    |gender | age| smoker|  bmi| brca2_truncation| cancer|
+|-----:|:------|:------|---:|------:|----:|----------------:|------:|
+| 27443|male   |fluid  |  35|      1| 22.3|                1|      1|
+| 28942|male   |male   |  43|      0| 18.0|                0|      0|
+| 26022|male   |male   |  29|      0| 32.5|                1|      1|
+| 22547|female |female |  54|      0| 20.0|                0|      0|
+| 29040|female |female |  37|      0| 26.1|                0|      0|
+| 22119|male   |male   |  51|      0| 29.8|                0|      1|
 
 *Note: this is simulated data.*
 
@@ -588,9 +588,8 @@ with alpha set to 0.05,
 indicated that we have enough statistical evidence to reject our null hypothesis, `\(H_0\)`,
 as our p-value was much smaller than alpha (p = 2.5454628\times 10^{-7}).
 
-
-We can accept the alternative hypothesis that, `\(H_1\)`, 
-that there is a difference in the male fruitfly lifespan
+We can suggest the alternative hypothesis, `\(H_1\)`, may be more favourable. 
+Specifically, that there is a difference in the male fruitfly lifespan
 when males are sexually active compared to when they are not.
 Due to the randomized experimental design, 
 we can also suggest that this effect of sexual activity is causal on the change in lifespan.
